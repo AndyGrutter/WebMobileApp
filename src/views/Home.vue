@@ -1,12 +1,15 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <Commute person="Andy" start="Earth" destination="Mars"/>
+    <img alt="Zurich Image" src="../assets/zurich.jpg" />
+    <Commute person="Andy" start="Earth" destination="Mars" />
+    <h1>Welcome to our</h1>
+    <h1>AWESOME website!</h1>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+/*
 import Commute from '@/components/Commute.vue'
 
 export default {
@@ -22,4 +25,12 @@ export default {
     }
   }
 }
+*/
 </script>
+
+<style scoped>
+img {
+  max-width: 20%;
+  height: auto;
+}
+</style>
