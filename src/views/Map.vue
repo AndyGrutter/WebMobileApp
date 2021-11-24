@@ -21,6 +21,7 @@
 // @ is an alias to /src
 import contentful from "@/modules/contentful.js";
 import mapboxgl from "mapbox-gl";
+import route from "@/modules/route.js";
 
 console.log(contentful);
 
@@ -69,7 +70,6 @@ export default {
       this.chapters.push(chapter);
     }
 
-
     let activeChapterName = "Ehrgraben";
 
     function setActiveChapter(chapterName, chapters) {
@@ -106,6 +106,26 @@ export default {
         }
       }
     };
+
+    map.on("load", () => {
+      map.addSource("route", {
+        type: "geojson",
+        data: route.path
+      });
+      map.addLayer({
+        id: "route",
+        type: "line",
+        source: "route",
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#888",
+          "line-width": 8,
+        },
+      });
+    });
   },
 };
 </script>
