@@ -77,24 +77,35 @@ export default {
       var marker;
 
       if (chapter.bild) {
-        marker = new mapboxgl.Marker()
+        var pictureHeight = post.fields.bild.fields.file.details.image.height;
+        var pictureWidth = post.fields.bild.fields.file.details.image.width;
+        var pictureScaleMultiplier = 0.2;
+        marker = new mapboxgl.Marker({
+          color: '#18A0FB'
+        })
           .setLngLat(coords)
           .setPopup(
             new mapboxgl.Popup().setHTML(
-              "<h2>" +
+              "<h4>" +
                 chapter.name +
-                "</h2><br/>" +
+                "</h4><br/>" +
                 "" +
-                "<h3>" +
+                "<h6>" +
                 chapter.infotext +
-                "<h3><br><img src=" +
+                "<h6><br><img src=" +
                 chapter.bild +
-                ' width="500" height="600">'
+                ' width="' +
+                pictureWidth * pictureScaleMultiplier +
+                '" height="' +
+                pictureHeight * pictureScaleMultiplier +
+                '">'
             )
           )
           .addTo(map);
       } else {
-        marker = new mapboxgl.Marker()
+        marker = new mapboxgl.Marker({
+          color: '#18A0FB'
+        })
           .setLngLat(coords)
           .setPopup(
             new mapboxgl.Popup().setHTML(
@@ -109,8 +120,8 @@ export default {
       }
 
       markers.push(marker);
-      console.log("öasfldsjölkasfdjlöfdaskljödsfajlköjlöasfdk")
-      console.log(markers)
+      console.log("öasfldsjölkasfdjlöfdaskljödsfajlköjlöasfdk");
+      console.log(markers);
     }
 
     // On every scroll event, check which element is on screen
@@ -217,12 +228,14 @@ export default {
       var coord = aareCoordinates[index];
 
       markers.forEach(function (marker) {
-        console.log("this is aofdjieoafwj")
+        console.log("this is aofdjieoafwj");
         var range = 0.0003;
         console.log(marker);
         var markerLanLat = marker.getLngLat();
         console.log(markerLanLat);
-        console.log(coord[0] + " lajdfkjdf " + [markerLanLat.lat, markerLanLat.lng]);
+        console.log(
+          coord[0] + " lajdfkjdf " + [markerLanLat.lat, markerLanLat.lng]
+        );
         if (
           coord[0] < markerLanLat.lng + range &&
           coord[0] > markerLanLat.lng - range &&
@@ -232,9 +245,7 @@ export default {
           if (!marker.getPopup().isOpen()) {
             marker.togglePopup();
           }
-        }
-        else
-        {
+        } else {
           if (marker.getPopup().isOpen()) {
             marker.togglePopup();
           }
@@ -366,6 +377,13 @@ export default {
 <style scoped >
 .map {
 }
+.marker {
+  background-image: url("/assets/marker.png");
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
 #features {
   width: 50%;
   margin-left: 50%;
@@ -373,11 +391,22 @@ export default {
   overflow-y: scroll;
   background-color: #fafafa;
 }
+</style>
+<style >
+.map {
+}
 .marker {
   background-image: url("/assets/marker.png");
   background-size: cover;
   width: 30px;
   height: 30px;
   cursor: pointer;
+}
+#features {
+  width: 50%;
+  margin-left: 50%;
+  font-family: sans-serif;
+  overflow-y: scroll;
+  background-color: #fafafa;
 }
 </style>
