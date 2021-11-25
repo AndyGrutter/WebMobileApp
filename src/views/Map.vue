@@ -88,17 +88,13 @@ export default {
             new mapboxgl.Popup().setHTML(
               "<h4>" +
                 chapter.name +
-                "</h4><br/>" +
-                "" +
-                "<h6>" +
-                chapter.infotext +
-                "<h6><br><img src=" +
+                "</h4><img src=" +
                 chapter.bild +
                 ' width="' +
                 pictureWidth * pictureScaleMultiplier +
                 '" height="' +
                 pictureHeight * pictureScaleMultiplier +
-                '">'
+                '" style="position: fixed; bottom: 0; right: 0;"><br><h6>' + chapter.infotext + "<h6>"
             )
           )
           .addTo(map);
@@ -115,13 +111,19 @@ export default {
                 chapter.infotext +
                 "<h3>"
             )
-          )
-          .addTo(map);
+          );
+          console.log("AAAAAAAAAAH")
+          console.log(marker)
+          //marker.getPopup()._content.style.color = "#FF00FF";
+          marker.getElement().style.backgroundImage = "url('/assets/marker.png')";
+          marker.getElement().style.backgroundSize = "cover";
+          marker.getElement().style.width = "10px";
+          marker.getElement().style.height = "10px";
+          marker.getElement().style.cursor = "pointer";
+          marker.addTo(map);
       }
 
       markers.push(marker);
-      console.log("öasfldsjölkasfdjlöfdaskljödsfajlköjlöasfdk");
-      console.log(markers);
     }
 
     // On every scroll event, check which element is on screen
@@ -228,14 +230,8 @@ export default {
       var coord = aareCoordinates[index];
 
       markers.forEach(function (marker) {
-        console.log("this is aofdjieoafwj");
         var range = 0.0003;
-        console.log(marker);
         var markerLanLat = marker.getLngLat();
-        console.log(markerLanLat);
-        console.log(
-          coord[0] + " lajdfkjdf " + [markerLanLat.lat, markerLanLat.lng]
-        );
         if (
           coord[0] < markerLanLat.lng + range &&
           coord[0] > markerLanLat.lng - range &&
@@ -375,24 +371,6 @@ export default {
 <style src='mapbox-gl/dist/mapbox-gl.css'></style>
 
 <style scoped >
-.map {
-}
-.marker {
-  background-image: url("/assets/marker.png");
-  background-size: cover;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-#features {
-  width: 50%;
-  margin-left: 50%;
-  font-family: sans-serif;
-  overflow-y: scroll;
-  background-color: #fafafa;
-}
-</style>
-<style >
 .map {
 }
 .marker {
