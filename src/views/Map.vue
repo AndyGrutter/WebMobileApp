@@ -297,7 +297,7 @@ export default {
           trigger: "#map",
           start: "center center",
           end: function () {
-            return "+=" + window.innerHeight * 20 + " bottom";
+            return "+=" + window.innerHeight * 30 + " bottom";
           },
           toggleActions: "restart pause reverse pause",
           markers: false,
