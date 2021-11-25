@@ -24,6 +24,7 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import * as turf from "@turf/helpers";
 import bearing from "@turf/bearing";
 import distance from "@turf/distance";
+import bezierSpline from "@turf/bezier-spline";
 
 console.log(contentful);
 
@@ -46,7 +47,7 @@ export default {
       center: [8.546385, 47.190093], // starting position [lng, lat]
       zoom: 17, // starting zoom
 
-        //center: aareCoordinates[0],
+      //center: aareCoordinates[0],
       attributionControl: false,
       interactive: false,
     });
@@ -84,7 +85,12 @@ export default {
       console.log(route.path.geometry.coordinates[0]);
     };*/
 
-    var aareCoordinates = route.path.geometry.coordinates;
+    //var aareCoordinates = route.path.geometry.coordinates;
+    var aareCoordinates = await getAareCoordinates();
+    console.log(
+      "These are the coordinates afösdjoiöjlewafoöijfaödjasdijifasöoji"
+    );
+    console.log(aareCoordinates);
 
     // Calculate Nearest Coordinates on Path for specified Locations
     wayPoints.forEach((wayPoint) => writeNearestAareIndex(wayPoint));
@@ -114,6 +120,21 @@ export default {
       return [wayPoint[0], wayPoint[1]];
     }
 
+    async function getAareCoordinates() {
+      const steps = 10000;
+
+      const gpxCoordinates = route.path.geometry.coordinates;
+
+      console.log("gpxCoordinates");
+      console.log(gpxCoordinates);
+
+      const curved = bezierSpline(turf.lineString(gpxCoordinates), {
+        resolution: steps * 20,
+        sharpness: 0.1
+      });
+      return curved.geometry.coordinates;
+    }
+
     function writeNearestAareIndex(wayPoint) {
       const from = getCoord(wayPoint);
       let min = 1000;
@@ -136,12 +157,12 @@ export default {
       const p1 = turf.point(aareCoordinates[index]);
       const p2 = turf.point(aareCoordinates[index + 1]);
       var calculatedBearing = bearing(p1, p2);
-      calculatedBearing = 0
+      calculatedBearing = 0;
 
       map.jumpTo({
         center: aareCoordinates[index],
         bearing: calculatedBearing,
-        essential: true
+        essential: true,
       });
 
       // Route updaten
@@ -180,8 +201,8 @@ export default {
           "line-cap": "round",
         },
         paint: {
-          "line-color": "#f05a2f",
-          "line-width": 3,
+          "line-color": "#18a0fb",
+          "line-width": 6,
         },
       });
     }
@@ -220,7 +241,7 @@ export default {
           trigger: "#map",
           start: "center center",
           end: function () {
-            return "+=" + window.innerHeight * 6 + " bottom";
+            return "+=" + window.innerHeight * 20 + " bottom";
           },
           toggleActions: "restart pause reverse pause",
           markers: false,
@@ -229,7 +250,7 @@ export default {
         },
       });
       tl.set("#map", { opacity: 1 });
-      tl.to(".end", { duration: 1 });
+      //tl.to(".end", { duration: 2 });
       tl.to("#map", {
         duration: 0,
         ease: "steps(200)",
@@ -253,8 +274,10 @@ export default {
         },
       });
 
+/*
       tl.set(".end", { display: "block" });
       tl.to(".end", { duration: 1 });
+      
       tl.to("#map", {
         duration: 4,
         ease: "steps(200)",
@@ -268,6 +291,7 @@ export default {
           map.resize();
         },
       });
+      
       tl.to(".end", { duration: 1 });
       tl.to(".end", {
         opacity: 1,
@@ -275,6 +299,7 @@ export default {
       });
 
       tl.to(".end", { duration: 2 });
+      */
       return tl;
     }
   },
