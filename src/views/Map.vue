@@ -37,6 +37,8 @@ export default {
     };
   },
   mounted: async function () {
+    const markers = [];
+
     mapboxgl.accessToken =
       "pk.eyJ1IjoidmFudmFuOTQiLCJhIjoiY2t2dGllZ2txMHJxMDJubHl3ajhkZG5ydiJ9.eliDbpJIW8GIoV7luqZuNw";
     let map = new mapboxgl.Map({
@@ -60,34 +62,55 @@ export default {
         center: coords,
         bearing: 0,
         duration: 6000,
-        bild: null
+        bild: null,
       };
-      
-      if (post.fields.bild != undefined)
-        {
-          chapter.bild = post.fields.bild.fields.file.url;
-        }
 
-      console.log("bild")
-      console.log(chapter.bild)
+      if (post.fields.bild != undefined) {
+        chapter.bild = post.fields.bild.fields.file.url;
+      }
+
+      console.log("bild");
+      console.log(chapter.bild);
 
       //const el = document.createElement("div");
       //el.className = "marker";
+      var marker;
 
-      if (chapter.bild)
-      {
-        new mapboxgl.Marker()
-        .setLngLat(coords)
-        .setPopup(new mapboxgl.Popup().setHTML("<h2>" + chapter.name + "</h2><br/>" + "" + "<h3>" + chapter.infotext + "<h3><br><img src=" + chapter.bild + ' width="500" height="600">'))
-        .addTo(map);
+      if (chapter.bild) {
+        marker = new mapboxgl.Marker()
+          .setLngLat(coords)
+          .setPopup(
+            new mapboxgl.Popup().setHTML(
+              "<h2>" +
+                chapter.name +
+                "</h2><br/>" +
+                "" +
+                "<h3>" +
+                chapter.infotext +
+                "<h3><br><img src=" +
+                chapter.bild +
+                ' width="500" height="600">'
+            )
+          )
+          .addTo(map);
+      } else {
+        marker = new mapboxgl.Marker()
+          .setLngLat(coords)
+          .setPopup(
+            new mapboxgl.Popup().setHTML(
+              "<h2>" +
+                chapter.name +
+                "</h2><br/><h3>" +
+                chapter.infotext +
+                "<h3>"
+            )
+          )
+          .addTo(map);
       }
-      else
-      {
-        new mapboxgl.Marker()
-        .setLngLat(coords)
-        .setPopup(new mapboxgl.Popup().setHTML("<h2>" + chapter.name + "</h2><br/><h3>" + chapter.infotext + "<h3>"))
-        .addTo(map);
-      }
+
+      markers.push(marker);
+      console.log("öasfldsjölkasfdjlöfdaskljödsfajlköjlöasfdk")
+      console.log(markers)
     }
 
     // On every scroll event, check which element is on screen
@@ -140,7 +163,7 @@ export default {
 
       const curved = bezierSpline(turf.lineString(gpxCoordinates), {
         resolution: steps * 20,
-        sharpness: 0.1
+        sharpness: 0.1,
       });
       return curved.geometry.coordinates;
     }
@@ -189,6 +212,32 @@ export default {
           addMarker(wayPoint);
         } else {
           removeMarker(wayPoint);
+        }
+      });
+      var coord = aareCoordinates[index];
+
+      markers.forEach(function (marker) {
+        console.log("this is aofdjieoafwj")
+        var range = 0.0003;
+        console.log(marker);
+        var markerLanLat = marker.getLngLat();
+        console.log(markerLanLat);
+        console.log(coord[0] + " lajdfkjdf " + [markerLanLat.lat, markerLanLat.lng]);
+        if (
+          coord[0] < markerLanLat.lng + range &&
+          coord[0] > markerLanLat.lng - range &&
+          coord[1] < markerLanLat.lat + range &&
+          coord[1] > markerLanLat.lat - range
+        ) {
+          if (!marker.getPopup().isOpen()) {
+            marker.togglePopup();
+          }
+        }
+        else
+        {
+          if (marker.getPopup().isOpen()) {
+            marker.togglePopup();
+          }
         }
       });
     }
@@ -281,7 +330,7 @@ export default {
         },
       });
 
-/*
+      /*
       tl.set(".end", { display: "block" });
       tl.to(".end", { duration: 1 });
       
@@ -325,10 +374,10 @@ export default {
   background-color: #fafafa;
 }
 .marker {
- background-image: url('/assets/marker.png');
- background-size: cover;
- width: 30px;
- height: 30px;
- cursor: pointer;
+  background-image: url("/assets/marker.png");
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 </style>
