@@ -26,8 +26,6 @@ import bearing from "@turf/bearing";
 import distance from "@turf/distance";
 import bezierSpline from "@turf/bezier-spline";
 
-console.log(contentful);
-
 export default {
   name: "Map",
   components: {
@@ -51,10 +49,6 @@ export default {
       attributionControl: false,
       interactive: false,
     });
-
-    console.log("Chapters");
-    console.log(this.chapters);
-
     var wayPoints = await contentful.getPosts();
 
     for (var post of wayPoints) {
@@ -62,15 +56,38 @@ export default {
       const chapter = {
         name: post.fields.title,
         lauftext: post.fields.lauftext,
+        infotext: post.fields.infotext,
         center: coords,
         bearing: 0,
         duration: 6000,
+        bild: null
       };
+      
+      if (post.fields.bild != undefined)
+        {
+          chapter.bild = post.fields.bild.fields.file.url;
+        }
 
-      new mapboxgl.Marker()
+      console.log("bild")
+      console.log(chapter.bild)
+
+      //const el = document.createElement("div");
+      //el.className = "marker";
+
+      if (chapter.bild)
+      {
+        new mapboxgl.Marker()
         .setLngLat(coords)
-        .setPopup(new mapboxgl.Popup().setHTML("<h1>" + chapter.name + "</h1>"))
+        .setPopup(new mapboxgl.Popup().setHTML("<h2>" + chapter.name + "</h2><br/>" + "" + "<h3>" + chapter.infotext + "<h3><br><img src=" + chapter.bild + ' width="500" height="600">'))
         .addTo(map);
+      }
+      else
+      {
+        new mapboxgl.Marker()
+        .setLngLat(coords)
+        .setPopup(new mapboxgl.Popup().setHTML("<h2>" + chapter.name + "</h2><br/><h3>" + chapter.infotext + "<h3>"))
+        .addTo(map);
+      }
     }
 
     // On every scroll event, check which element is on screen
@@ -87,10 +104,6 @@ export default {
 
     //var aareCoordinates = route.path.geometry.coordinates;
     var aareCoordinates = await getAareCoordinates();
-    console.log(
-      "These are the coordinates afösdjoiöjlewafoöijfaödjasdijifasöoji"
-    );
-    console.log(aareCoordinates);
 
     // Calculate Nearest Coordinates on Path for specified Locations
     wayPoints.forEach((wayPoint) => writeNearestAareIndex(wayPoint));
@@ -124,9 +137,6 @@ export default {
       const steps = 10000;
 
       const gpxCoordinates = route.path.geometry.coordinates;
-
-      console.log("gpxCoordinates");
-      console.log(gpxCoordinates);
 
       const curved = bezierSpline(turf.lineString(gpxCoordinates), {
         resolution: steps * 20,
@@ -209,7 +219,6 @@ export default {
 
     function addMarker(wayPoint) {
       if (!wayPoint.marker) {
-        console.log("Added wayPoint", wayPoint);
         self.currentWaypoint = wayPoint;
 
         var el = document.createElement("div");
@@ -224,9 +233,7 @@ export default {
     }
 
     function removeMarker(wayPoint) {
-      // console.log("removeMarker -> wayPoint", wayPoint)
       if (wayPoint.marker) {
-        console.log("Removed wayPoint", wayPoint);
         self.currentWaypoint = wayPoint;
 
         wayPoint.marker.remove();
@@ -316,5 +323,12 @@ export default {
   font-family: sans-serif;
   overflow-y: scroll;
   background-color: #fafafa;
+}
+.marker {
+ background-image: url('/assets/marker.png');
+ background-size: cover;
+ width: 30px;
+ height: 30px;
+ cursor: pointer;
 }
 </style>
