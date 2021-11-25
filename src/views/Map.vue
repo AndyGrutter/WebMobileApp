@@ -32,6 +32,12 @@
 import contentful from "@/modules/contentful.js";
 import mapboxgl from "mapbox-gl";
 import route from "@/modules/route.js";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import * as turf from "@turf/helpers";
+import bearing from "@turf/bearing";
+import bezierSpline from "@turf/bezier-spline";
+import distance from "@turf/distance";
 
 console.log(contentful);
 
@@ -47,10 +53,10 @@ export default {
   },
   mounted: async function () {
     mapboxgl.accessToken =
-      "pk.eyJ1IjoiYW5keWdydXR0ZXIiLCJhIjoiY2t3M2M1N3I2MjRiODJ2cWkyeXRkMWVxcyJ9.tVYdD1yihuyo6Xbu-dRaag";
+      "pk.eyJ1IjoidmFudmFuOTQiLCJhIjoiY2t2dGllZ2txMHJxMDJubHl3ajhkZG5ydiJ9.eliDbpJIW8GIoV7luqZuNw";
     let map = new mapboxgl.Map({
       container: this.$refs.container, // container ID
-      style: "mapbox://styles/andygrutter/ckw3dqzum0zlt14mw28a73v3b", // My custom style
+      style: "mapbox://styles/vanvan94/ckw7oc71n3e3q15t6bgd53o53", // My custom style
       center: [8.546385, 47.190093], // starting position [lng, lat]
       zoom: 9, // starting zoom
     });
@@ -121,7 +127,7 @@ export default {
       map.easeTo({
       //map.jumpTo({
             center: route.path.geometry.coordinates[Math.floor(window.scrollY/50)],
-            zoom: 15,
+            zoom: 17,
             essential: true,
       });
       console.log(route.path.geometry.coordinates[0])
