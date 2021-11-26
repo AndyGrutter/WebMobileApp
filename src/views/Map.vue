@@ -63,6 +63,9 @@ export default {
         bearing: 0,
         duration: 6000,
         bild: null,
+        bildX: post.fields.bildx,
+        bildY: post.fields.bildy,
+        bildScale: post.fields.bildscale,
       };
 
       chapter.bild = post.fields.bild?.fields?.file?.url;
@@ -77,7 +80,7 @@ export default {
       if (chapter.bild) {
         var pictureHeight = post.fields.bild.fields.file.details.image.height;
         var pictureWidth = post.fields.bild.fields.file.details.image.width;
-        var pictureScaleMultiplier = 0.2;
+        var pictureScaleMultiplier = chapter.bildScale;
         marker = new mapboxgl.Marker({
           color: "#18A0FB",
         })
@@ -92,7 +95,7 @@ export default {
                 pictureWidth * pictureScaleMultiplier +
                 '" height="' +
                 pictureHeight * pictureScaleMultiplier +
-                '" style="position: fixed; bottom: 0; right: 0;"><br><h6>' +
+                '" style="position: fixed; bottom: ' + chapter.bildX + 'vh; right: ' + chapter.bildY + 'vw;"><br><h6>' +
                 chapter.infotext +
                 "<h6>"
             )
@@ -101,6 +104,7 @@ export default {
       } else {
         marker = new mapboxgl.Marker({
           color: "#18A0FB",
+          className: "Marker"
         })
           .setLngLat(coords)
           .setPopup(
@@ -112,15 +116,6 @@ export default {
                 "<h3>"
             )
           );
-        console.log("AAAAAAAAAAH");
-        console.log(marker);
-        //marker.getPopup()._content.style.color = "#FF00FF";
-        marker.getElement().style.backgroundImage = "url('/assets/marker.png')";
-        marker.getElement().style.backgroundSize = "cover";
-        marker.getElement().style.width = "10px";
-        marker.getElement().style.height = "10px";
-        marker.getElement().style.cursor = "pointer";
-        marker.addTo(map);
       }
 
       markers.push(marker);
@@ -318,8 +313,9 @@ export default {
       });
       tl.set("#map", { opacity: 1 });
       //tl.to(".end", { duration: 2 });
+      /*
       tl.to("#map", {
-        duration: 0,
+        duration: 1,
         ease: "steps(200)",
         width: "110vw",
         maxWidth: "110vw",
@@ -331,6 +327,7 @@ export default {
           map.resize();
         },
       });
+      */
       const progressState = { value: 0.0 };
       tl.to(progressState, {
         duration: 25,
@@ -375,7 +372,11 @@ export default {
 <style src='mapbox-gl/dist/mapbox-gl.css'></style>
 
 <style >
-.marker {
+#map {
+  height: 100vh;
+  max-height: 100vh;
+}
+#marker {
   background-image: url("/assets/marker.png");
   background-size: cover;
   width: 30px;
