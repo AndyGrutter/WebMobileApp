@@ -65,9 +65,7 @@ export default {
         bild: null,
       };
 
-      if (post.fields.bild != undefined) {
-        chapter.bild = post.fields.bild.fields.file.url;
-      }
+      chapter.bild = post.fields.bild?.fields?.file?.url;
 
       console.log("bild");
       console.log(chapter.bild);
@@ -81,7 +79,7 @@ export default {
         var pictureWidth = post.fields.bild.fields.file.details.image.width;
         var pictureScaleMultiplier = 0.2;
         marker = new mapboxgl.Marker({
-          color: '#18A0FB'
+          color: "#18A0FB",
         })
           .setLngLat(coords)
           .setPopup(
@@ -94,13 +92,15 @@ export default {
                 pictureWidth * pictureScaleMultiplier +
                 '" height="' +
                 pictureHeight * pictureScaleMultiplier +
-                '" style="position: fixed; bottom: 0; right: 0;"><br><h6>' + chapter.infotext + "<h6>"
+                '" style="position: fixed; bottom: 0; right: 0;"><br><h6>' +
+                chapter.infotext +
+                "<h6>"
             )
           )
           .addTo(map);
       } else {
         marker = new mapboxgl.Marker({
-          color: '#18A0FB'
+          color: "#18A0FB",
         })
           .setLngLat(coords)
           .setPopup(
@@ -112,15 +112,15 @@ export default {
                 "<h3>"
             )
           );
-          console.log("AAAAAAAAAAH")
-          console.log(marker)
-          //marker.getPopup()._content.style.color = "#FF00FF";
-          marker.getElement().style.backgroundImage = "url('/assets/marker.png')";
-          marker.getElement().style.backgroundSize = "cover";
-          marker.getElement().style.width = "10px";
-          marker.getElement().style.height = "10px";
-          marker.getElement().style.cursor = "pointer";
-          marker.addTo(map);
+        console.log("AAAAAAAAAAH");
+        console.log(marker);
+        //marker.getPopup()._content.style.color = "#FF00FF";
+        marker.getElement().style.backgroundImage = "url('/assets/marker.png')";
+        marker.getElement().style.backgroundSize = "cover";
+        marker.getElement().style.width = "10px";
+        marker.getElement().style.height = "10px";
+        marker.getElement().style.cursor = "pointer";
+        marker.addTo(map);
       }
 
       markers.push(marker);
@@ -217,7 +217,9 @@ export default {
         Math.max(2, index)
       ); // at least two elements two preserve Errors
       const featureCollection = turf.lineString(slicedAareCoordinates);
-      map.getSource("route").setData(featureCollection);
+      if (map.getSource("route") != undefined) {
+        map.getSource("route").setData(featureCollection);
+      }
 
       // Markers updaten
       wayPoints.forEach((wayPoint) => {
@@ -283,8 +285,10 @@ export default {
         const coord = aareCoordinates[wayPoint.nearestAareIndex];
         wayPoint.marker = new mapboxgl.Marker(el);
 
-        if (!wayPoint.markerInvisible)
-          wayPoint.marker.setLngLat(coord).addTo(map);
+        if (!wayPoint.markerInvisible && coord != undefined)
+          wayPoint.marker
+            .setLngLat({ lon: coord[0], lat: coord[1] })
+            .addTo(map);
       }
     }
 
@@ -370,9 +374,7 @@ export default {
 </script>
 <style src='mapbox-gl/dist/mapbox-gl.css'></style>
 
-<style scoped >
-.map {
-}
+<style >
 .marker {
   background-image: url("/assets/marker.png");
   background-size: cover;
