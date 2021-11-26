@@ -87,7 +87,7 @@ export default {
           .setLngLat(coords)
           .setPopup(
             new mapboxgl.Popup().setHTML(
-              "<h4>" +
+              '<h4 style="font-family:Helvetica">' +
                 chapter.name +
                 "</h4><img src=" +
                 chapter.bild +
@@ -95,7 +95,7 @@ export default {
                 pictureWidth * pictureScaleMultiplier +
                 '" height="' +
                 pictureHeight * pictureScaleMultiplier +
-                '" style="position: fixed; bottom: ' + chapter.bildX + 'vh; right: ' + chapter.bildY + 'vw;"><br><h6>' +
+                '" style="position: fixed; bottom: ' + chapter.bildY + 'vh; right: ' + chapter.bildX + 'vw;"><br><h6 style="font-family:Helvetica">' +
                 chapter.infotext +
                 "<h6>"
             )
