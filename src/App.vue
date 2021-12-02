@@ -15,10 +15,11 @@
   text-align: center;
   color: #2c3e50;
 }
-
+/*:-moz-broken
 #nav {
   display: none;
 }
+*/
 
 #nav a {
   font-weight: bold;
